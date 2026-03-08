@@ -284,16 +284,16 @@ function renderTable(Array) {
         }
 
         newRow.innerHTML = `
-                <td class="px-4 py-3">${product.id}</td>
-                <td class="px-4 py-3">
+                <td class="px-4 py-3" data-label="ID">${product.id}</td>
+                <td class="px-4 py-3" data-label="Image">
                     <img
                         src="${product.image}"
                         alt="${product.title}" class="w-16 h-16 object-cover rounded-lg"></td>
-                <td class="px-4 py-3 font-medium text-gray-900">${product.title}</td>
-                <td class="px-4 py-3 text-green-600 font-semibold">$${Number(product.price).toFixed(2)}</td>
-                <td class="px-4 py-3"><span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-200">${product.category}</span></td>
-                <td class="px-4 py-3 text-sm text-gray-500">${desc}</td>
-                <td class="px-4 py-3 space-x-2">
+                <td class="px-4 py-3 font-medium text-gray-900" data-label="Title">${product.title}</td>
+                <td class="px-4 py-3 text-green-600 font-semibold" data-label="Price">$${Number(product.price).toFixed(2)}</td>
+                <td class="px-4 py-3" data-label="Category"><span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded border border-gray-200">${product.category}</span></td>
+                <td class="px-4 py-3 text-sm text-gray-500" data-label="Description">${desc}</td>
+                <td class="px-4 py-3 space-x-2" data-label="Actions">
                     <button class="bg-blue-50 hover:bg-blue-100 focus:ring-4 focus:ring-blue-100 text-blue-600 font-medium py-1.5 px-3 rounded-lg transition-colors border border-blue-200 shadow-sm" onclick="showModal('.editProductmodal', ${product.id})">Edit</button>
                     <button class="bg-red-50 hover:bg-red-100 focus:ring-4 focus:ring-red-100 text-red-600 font-medium py-1.5 px-3 rounded-lg transition-colors border border-red-200 shadow-sm" onclick="deleteProduct(${product.id})">Delete</button>
                 </td>
