@@ -15,3 +15,94 @@
 .toast-exit {
   animation: slideOutRight 0.3s ease-in forwards;
 }
+
+/* =========================================
+   Mobile Responsive Table (Stacked Cards)
+   ========================================= */
+@media screen and (max-width: 768px) {
+  /* Hide the desktop header */
+  #productTable thead {
+    display: none;
+  }
+  
+  /* Make the table and its body flex containers */
+  #productTable, 
+  #productTable tbody, 
+  #productTable tr, 
+  #productTable td {
+    display: block;
+    width: 100%;
+  }
+  
+  /* Style each row as a card */
+  #productTable tr {
+    margin-bottom: 24px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    background-color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Remove the default Tailwind bottom border on rows */
+    border-bottom: 1px solid #e5e7eb !important; 
+  }
+  
+  /* Push up rows on hover like the original table */
+  #productTable tr:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Adjust padding inside cells for card layout */
+  #productTable td {
+    padding: 12px 0;
+    text-align: right;
+    position: relative;
+    border-bottom: 1px solid #f3f4f6; /* Very subtle line between fields */
+  }
+  
+  /* Remove border from the last cell (Actions button) */
+  #productTable td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  /* Create the labels on the left using the data-label attribute */
+  #productTable td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #4b5563; /* text-gray-600 */
+    text-align: left;
+    width: 45%;
+    padding-right: 15px;
+  }
+
+  /* Specific fix for the Image cell */
+  #productTable td[data-label="Image"] {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  #productTable td[data-label="Image"]::before {
+     top: auto;
+     transform: none;
+  }
+
+  /* Fix for empty state to cover full width, center, and not show labels */
+  #productTable td.dataTables_empty,
+  #productTable td[colspan="7"] {
+    text-align: center;
+    padding: 32px 16px;
+    border: none;
+  }
+  
+  #productTable td.dataTables_empty::before,
+  #productTable td[colspan="7"]::before {
+    display: none;
+  }
+}
