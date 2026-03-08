@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>product inventory management</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+    </style>
+</head>
+
+
+<body>
+    <header>
+        <nav
+            class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">inventory management
+                    system</span>
+            </a>
+            <form action="" id="searchForm" class="flex items-center max-w-sm mx-auto">
+                <div class="relative w-full max-w-md">
+                    <input type="text" id="searchInput" placeholder="Search products..."
+                        class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none">
+
+                    <div id="resultsPanel"
+                        class="hidden absolute left-0 right-0 mt-2 bg-white border rounded-xl shadow-lg z-50 overflow-hidden transition-all duration-300 ease-in-out">
+
+                        <div id="loadingSpinner" class="hidden flex items-center justify-center p-4">
+                            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                        </div>
+
+                        <ul id="resultsList" class="max-height-[300px] overflow-y-auto">
+                        </ul>
+                    </div>
+                </div>
+                <button type="submit"
+                    class="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                    <span class="sr-only">Search</span>
+                </button>
+            </form>
+
+            <div class="AddBtn">
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded AddBtn button"
+                    onclick="showModal('.addProductmodal')">
+                    Add Product +
+                </button>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="tableContainer">
+        <table id="productTable" class="table-auto w-full text-left whitespace-no-wrap">
+            <thead>
+                <tr>
+                    <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">id#
+                    </th>
+                    <th
+                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                        Image</th>
+                    <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Title
+                    </th>
+                    <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Price
+                    </th>
+                    <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                        Category
+                    </th>
+
+                    <th
+                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                        Description</th>
+                    <th
+                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">
+                        Actions</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- add model -->
+
+    <div class="modal addProductmodal opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm ">
+
+            <div class="modal-content w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300">
+
+                <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Add new product
+                    </h3>
+                    <button
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors addcloseBtn"
+                        onclick="closeModal('.addProductmodal')">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form class="p-6 space-y-4 addProductForm">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Product
+                            Title</label>
+                        <input name="productName" type="text" placeholder="e.g. Wireless Headphones"
+                            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Price
+                                ($)</label>
+                            <input name="productPrice" type="number" placeholder="0.00"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                required>
+                        </div>
+                        <div>
+                            <label
+                                class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
+                            <select name="productCategory"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option>Electronics</option>
+                                <option>Fashion</option>
+                                <option>Home</option>
+                                <option>Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                        <textarea name="productDescription" rows="3" placeholder="Tell us about the product..."
+                            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Image URL</label>
+                        <div class="relative">
+                            <div
+                                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <input name="imageUrl" type="url" placeholder="https://example.com/image.jpg"
+                                class="w-full px-4 py-2.5 ps-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex gap-3">
+                        <button type="button"
+                            class=" addcloseBtn w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                            onclick="closeModal('.addProductmodal')">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all active:scale-95">
+                            Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- edit modal -->
+
+
+    <div class="modal editProductmodal opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm ">
+
+            <div class="modal-content w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 transition-transform duration-300">
+
+                <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Edit product
+                    </h3>
+                    <button
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors editcloseBtn"
+                        onclick="closeModal('.editProductmodal')">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form class="p-6 space-y-4 editProductForm">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Product
+                            Title</label>
+                        <input name="productName" type="text" placeholder="e.g. Wireless Headphones"
+                            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Price
+                                ($)</label>
+                            <input name="productPrice" type="number" placeholder="0.00"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                required>
+                        </div>
+                        <div>
+                            <label
+                                class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
+                            <select name="productCategory"
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                <option>Electronics</option>
+                                <option>Fashion</option>
+                                <option>Home</option>
+                                <option>Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                        <textarea name="productDescription" rows="3" placeholder="Tell us about the product..."
+                            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Image
+                            URL</label>
+                        <div class="relative">
+                            <div
+                                class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <input name="imageUrl" type="url" placeholder="https://example.com/image.jpg"
+                                class="w-full px-4 py-2.5 ps-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex gap-3">
+                        <button type="button"
+                            class="w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                            onclick="closeModal('.editProductmodal')">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="w-full px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition-all active:scale-95">
+                            Save Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-[60] flex flex-col gap-3"></div>
+
+    <script src="./js/main.js"></script>
+</body>
+
+</html>
